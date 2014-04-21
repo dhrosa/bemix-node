@@ -1,16 +1,10 @@
 import time, urllib, urllib2, json, sys
 from VLCPlayer import Player
-
-# SSL is not required right now.
-# SERVER = "https://rum.mit.edu"
-# SECRET_USERNAME = "security-expert-isaac"
-# SECRET_PASSWORD = "leaves-no-stone-unturned"
-
-SERVER_NOSSL = "http://rum.mit.edu"
+import config
 
 def json_post(url, data):
     # passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    # passman.add_password(None, SERVER, SECRET_USERNAME, SECRET_PASSWORD)
+    # passman.add_password(None, config.SERVER, config.SECRET_USERNAME, config.SECRET_PASSWORD)
     # urllib2.install_opener(urllib2.build_opener(urllib2.HTTPBasicAuthHandler(passman)))
 
     params = urllib.urlencode({'json': json.dumps(data)})
@@ -19,11 +13,11 @@ def json_post(url, data):
     res = req.read()
     return json.loads(res)
 
-if len(sys.argv) == 2:
-    NAME = sys.argv[1]
-else:
-    print "Usage: python bemix.py nodename"
-    sys.exit(0)
+# if len(sys.argv) == 2:
+#     NODENAME = sys.argv[1]
+# else:
+#     print "Usage: python bemix.py nodename"
+#     sys.exit(0)
 
 player = Player()
 song = None
@@ -31,7 +25,7 @@ song = None
 while True:
     time.sleep(.5)
 
-    req = {'name': NAME}
+    req = {'name': config.NODENAME}
 
     if player.loaded:
         req['position'] = player.position
@@ -42,7 +36,7 @@ while True:
         req['finished'] = song
 
     try:
-        res = json_post(SERVER_NOSSL + '/remix_player/tick', req)
+        res = json_post(config.SERVER_NOSSL + '/remix_player/tick', req)
     except urllib2.URLError, e:
         continue
 
@@ -51,8 +45,8 @@ while True:
     if song != res['song']:
         song = res['song']
         if res['song'] != None:
-            print SERVER_NOSSL + "/remix_player/get/" + song
-            player.load_url(SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
+            print config.SERVER_NOSSL + "/remix_player/get/" + song
+            player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
         else:
             player.unload()
 
