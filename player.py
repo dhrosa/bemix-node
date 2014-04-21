@@ -52,7 +52,7 @@ while True:
         song = res['song']
         if res['song'] != None:
             print SERVER_NOSSL + "/remix_player/get/" + song
-            player.load_url(SERVER_NOSSL + '/remix_player/get/' + song)
+            player.load_url(SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
         else:
             player.unload()
 
