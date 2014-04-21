@@ -1,4 +1,4 @@
-NODENAME = "g413"
+NODENAME = "nowhere"
 
 SERVER_NOSSL = "http://rum.mit.edu"
 # SSL is not required right now.
