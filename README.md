@@ -25,7 +25,9 @@ To enable the buttons, you will need to be running this from a raspberry pi (for
 
 Plug the board in the ceiling into the pi and run:
 
-    $ python buttons.py
+    $ sudo python buttons.py
+
+(buttons needs sudo because it accesses the gpio pins)
 
 ### Screens
 Screens are useful for this sort of thing. Consider running these two processes in screens.
