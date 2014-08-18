@@ -17,6 +17,7 @@ class Player(object):
     def _get_volume(self):
         return self.vlc_player.audio_get_volume()
     def _set_volume(self, volume):
+        self.vlc_player.audio_set_mute(False)
         self.vlc_player.audio_set_volume(volume)
     volume = property(_get_volume, _set_volume)
 
