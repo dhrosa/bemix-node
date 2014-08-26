@@ -21,6 +21,7 @@ def json_post(url, data):
 
 player = Player()
 song = None
+song_index = None
 
 while True:
     time.sleep(.5)
@@ -42,8 +43,9 @@ while True:
 
     player.volume = res['volume']
 
-    if song != res['song']:
+    if song_index != res['song_index']:
         song = res['song']
+        song_index = res['song_index']
         if res['song'] != None:
             print config.SERVER_NOSSL + "/remix_player/get/" + song
             player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
