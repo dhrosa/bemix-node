@@ -23,6 +23,7 @@ player = Player()
 song = None
 song_index = None
 source = None
+error =False
 while True:
     time.sleep(.5)
 
@@ -33,9 +34,10 @@ while True:
     else:
         req['position'] = 0.0
 
-    if player.finished and song != None:
+    if (player.finished and song != None) or error:
         req['finished'] = song
         req['source']= source
+        error = False
 
     try:
         res = json_post(config.SERVER_NOSSL + '/remix_player/tick', req)
@@ -45,7 +47,6 @@ while True:
         continue
 
     player.volume = res['volume']
-
     if song_index != res['song_index']:
         song = res['song']
         song_index = res['song_index']
@@ -55,24 +56,25 @@ while True:
                 print config.SERVER_NOSSL + "/remix_player/get/" + song
                 player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
             elif source == "youtube":
-                print song
                 try:
                     youtubeStr = YoutubeStreamer(song)
                     player.load_url(youtubeStr.get_stream_url())
                 except:
                     req['finished'] = song
                     try:
-                        res = json_post(config.SERVER_NOSSL + '/remix_player/tick', req)
+                        error =True
+                        
                     except urllib2.URLError, e:
                         print e
                         print config.SERVER_NOSSL + '/remix_player/tick'
                         continue
                     
-        else:
-            player.unload()
-
     if song != None:
         if res['state'] == 'playing':
             player.play()
         elif res['state'] == 'paused':
             player.pause()
+        if res['song']==None:
+            song = None
+            player.unload()
+
