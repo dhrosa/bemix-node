@@ -1,7 +1,7 @@
 import time, urllib, urllib2, json, sys
 from VLCPlayer import Player
 import config
-
+from youtubeStreamer import YoutubeStreamer
 def json_post(url, data):
     # passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
     # passman.add_password(None, config.SERVER, config.SECRET_USERNAME, config.SECRET_PASSWORD)
@@ -22,7 +22,7 @@ def json_post(url, data):
 player = Player()
 song = None
 song_index = None
-
+source = None
 while True:
     time.sleep(.5)
 
@@ -35,10 +35,13 @@ while True:
 
     if player.finished and song != None:
         req['finished'] = song
+        req['source']= source
 
     try:
         res = json_post(config.SERVER_NOSSL + '/remix_player/tick', req)
     except urllib2.URLError, e:
+        print e
+        print config.SERVER_NOSSL + '/remix_player/tick'
         continue
 
     player.volume = res['volume']
@@ -46,9 +49,25 @@ while True:
     if song_index != res['song_index']:
         song = res['song']
         song_index = res['song_index']
-        if res['song'] != None:
-            print config.SERVER_NOSSL + "/remix_player/get/" + song
-            player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
+        if song != None:
+            source = res['song_source']
+            if source == "local":
+                print config.SERVER_NOSSL + "/remix_player/get/" + song
+                player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
+            elif source == "youtube":
+                print song
+                try:
+                    youtubeStr = YoutubeStreamer(song)
+                    player.load_url(youtubeStr.get_stream_url())
+                except:
+                    req['finished'] = song
+                    try:
+                        res = json_post(config.SERVER_NOSSL + '/remix_player/tick', req)
+                    except urllib2.URLError, e:
+                        print e
+                        print config.SERVER_NOSSL + '/remix_player/tick'
+                        continue
+                    
         else:
             player.unload()
 

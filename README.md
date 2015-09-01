@@ -8,6 +8,9 @@ First, configure your node:
     $ cp config_example.py config.py
     $ nano config.py
 
+And install pafy:
+    $pip install pafy
+
 If you don't know the username and password, ask someone on hall or email miles@milessteele.com.
 
 ## Starting a Node
