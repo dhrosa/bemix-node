@@ -1,6 +1,10 @@
 import RPi.GPIO as GPIO
 import time, urllib2, base64
 import config
+import subprocess
+import mplayer
+
+blipper = mplayer.Player()
 
 print "Starting button listener..."
 
@@ -22,6 +26,10 @@ def bemix_remote_command(command):
     req.add_header("Authorization", "Basic %s" % base64string)
     res = urllib2.urlopen(req)
     return res.read()
+
+def blip():
+    sndfile = "./blip.ogg"
+    blipper.loadfile(sndfile)
 
 ## setup pins
 pins = [4,17,18,23,22]
@@ -47,6 +55,7 @@ while True:
     for pin in pins:
         if GPIO.input(pin) and (time.time()-wait >= 0 or pin != press):
             print names[pin]
+            blip()
             # pianowrite(pianobar_cmds[pin])
             bemix_remote_command(bemix_cmds[pin])
             wait = time.time() + delay
