@@ -57,6 +57,7 @@ while True:
                 player.load_url(config.SERVER_NOSSL + '/remix_player/get/' + song + "?.mp3")
             elif source == "youtube":
                 try:
+                    print "youtube: {}".format(song)
                     youtubeStr = YoutubeStreamer(song)
                     player.load_url(youtubeStr.get_stream_url())
                 except:
