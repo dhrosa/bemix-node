@@ -32,17 +32,43 @@ def blip():
     blipper.loadfile(sndfile)
 
 ## setup pins
-pins = [4,17,18,23,22]
-names = {4:'back',17:'fwd',18:'down',23:'pause',22:'up'}
-pianobar_cmds = {4:'' ,17:'n', 18:'(', 23:'p', 22:')'}
-bemix_cmds = {4:'prev' ,17:'next', 18:'voldown', 23:'pause', 22:'volup'}
+BUTTON_LEFT = 4
+BUTTON_UP = 22
+BUTTON_RIGHT = 17
+BUTTON_DOWN = 18
+BUTTON_CENTER = 23
+
+pin_names = {
+    BUTTON_LEFT: 'back',
+    BUTTON_RIGHT: 'forward',
+    BUTTON_DOWN: 'down',
+    BUTTON_UP: 'up',
+    BUTTON_CENTER: 'pause'
+}
+
+pianobar_cmds = {
+    BUTTON_LEFT: '',
+    BUTTON_RIGHT:'n',
+    BUTTON_DOWN:'(',
+    BUTTON_CENTER:'p',
+    BUTTON_UP:')'
+}
+
+bemix_cmds = {
+    BUTTON_LEFT:'prev',
+    BUTTON_RIGHT:'next',
+    BUTTON_DOWN:'voldown',
+    BUTTON_CENTER:'pause',
+    BUTTON_UP:'volup'
+}
+
 wait = 0
 press = 0
 delay = .25
 
 print "Setting up pins..."
-for pin in pins:
-    GPIO.setup(pin,GPIO.IN)
+for pin_number in pin_names.keys():
+    GPIO.setup(pin_number,GPIO.IN)
 
 print "Started polling."
 frame = 0
