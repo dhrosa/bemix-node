@@ -82,7 +82,7 @@ while True:
 
     for pin in pin_numbers:
         if GPIO.input(pin) and (time.time()-wait >= 0 or pin != press):
-            print names[pin]
+            print pin_names[pin]
             blip()
             # pianowrite(pianobar_cmds[pin])
             bemix_remote_command(bemix_cmds[pin])
