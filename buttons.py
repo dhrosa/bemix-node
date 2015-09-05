@@ -46,20 +46,22 @@ pin_names = {
     BUTTON_CENTER: 'pause'
 }
 
+pin_numbers = pin_names.keys()
+
 pianobar_cmds = {
     BUTTON_LEFT: '',
-    BUTTON_RIGHT:'n',
-    BUTTON_DOWN:'(',
-    BUTTON_CENTER:'p',
-    BUTTON_UP:')'
+    BUTTON_RIGHT: 'n',
+    BUTTON_DOWN: '(',
+    BUTTON_CENTER: 'p',
+    BUTTON_UP: ')'
 }
 
 bemix_cmds = {
-    BUTTON_LEFT:'prev',
-    BUTTON_RIGHT:'next',
-    BUTTON_DOWN:'voldown',
-    BUTTON_CENTER:'pause',
-    BUTTON_UP:'volup'
+    BUTTON_LEFT: 'prev',
+    BUTTON_RIGHT: 'next',
+    BUTTON_DOWN: 'voldown',
+    BUTTON_CENTER: 'pause',
+    BUTTON_UP: 'volup'
 }
 
 wait = 0
@@ -67,8 +69,8 @@ press = 0
 delay = .25
 
 print "Setting up pins..."
-for pin_number in pin_names.keys():
-    GPIO.setup(pin_number,GPIO.IN)
+for pin in pin_numbers:
+    GPIO.setup(pin, GPIO.IN)
 
 print "Started polling."
 frame = 0
@@ -78,7 +80,7 @@ while True:
         pass
     frame += 1
 
-    for pin in pins:
+    for pin in pin_numbers:
         if GPIO.input(pin) and (time.time()-wait >= 0 or pin != press):
             print names[pin]
             blip()
